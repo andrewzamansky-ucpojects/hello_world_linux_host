@@ -1,213 +1,104 @@
+/*
+  ==============================================================================
+
+    This file was auto-generated!
+
+  ==============================================================================
+*/
+
 #ifndef MAINCOMPONENT_H_INCLUDED
 #define MAINCOMPONENT_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "AudioComponent.h"
 
-AudioComponent* createAudioComponent();
+#include "GuiMain.h"
 
 
-class MainContentComponent : public AudioAppComponent,
-	public ChangeListener,
-	public Button::Listener
+//==============================================================================
+/*
+    This component lives inside our window, and this is where you should put all
+    your controls and content.
+*/
+class MainContentComponent   : public AudioAppComponent
 {
-
 public:
-	MainContentComponent()
-		: state(Stopped)
-	{
+    //==============================================================================
+    MainContentComponent()
+    {
+        addAndMakeVisible(&guiMain);
+        
+        setSize (1000, 800);
+
+        // specify the number of input and output channels that we want to open
+        setAudioChannels (2, 2);
+    }
+
+    ~MainContentComponent()
+    {
+        shutdownAudio();
+    }
+
+    //==============================================================================
+    void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
+    {
+        // This function will be called when the audio device is started, or when
+        // its settings (i.e. sample rate, block size, etc) are changed.
+
+        // You can use this function to initialise any resources you might need,
+        // but be careful - it will be called on the audio thread, not the GUI thread.
+
+        // For more details, see the help for AudioProcessor::prepareToPlay()
+    }
+
+    void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
+    {
+        // Your audio-processing code goes here!
+
+        // For more details, see the help for AudioProcessor::getNextAudioBlock()
+
+        // Right now we are not producing any data, in which case we need to clear the buffer
+        // (to prevent the output of random noise)
+        bufferToFill.clearActiveBufferRegion();
+    }
+
+    void releaseResources() override
+    {
+        // This will be called when the audio device stops, or when it is being
+        // restarted due to a setting change.
+
+        // For more details, see the help for AudioProcessor::releaseResources()
+    }
+
+    //==============================================================================
+    void paint (Graphics& g) override
+    {
+        // (Our component is opaque, so we must completely fill the background with a solid colour)
+        g.fillAll (Colours::black);
 
 
-		levelSlider.setRange(0.0, 0.25);
-		levelSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-		levelLabel.setText("VB Level", dontSendNotification);
+        // You can add your drawing code here!
+    }
 
-		addAndMakeVisible(levelSlider);
-		addAndMakeVisible(levelLabel);
+    void resized() override
+    {
+        // This is called when the MainContentComponent is resized.
+        // If you add any child components, this is where you should
+        // update their positions.
+    }
 
-		addAndMakeVisible(&openButton);
-		openButton.setButtonText("Open...");
-		openButton.addListener(this);
-
-		addAndMakeVisible(&playButton);
-		playButton.setButtonText("Play");
-		playButton.addListener(this);
-		playButton.setColour(TextButton::buttonColourId, Colours::green);
-		playButton.setEnabled(false);
-
-		addAndMakeVisible(&stopButton);
-		stopButton.setButtonText("Stop");
-		stopButton.addListener(this);
-		stopButton.setColour(TextButton::buttonColourId, Colours::red);
-		stopButton.setEnabled(false);
-
-		setSize(300, 200);
-
-		/************start audio section  1*******************/
-		AudioComponentObj = createAudioComponent();
-		pControl_PC_App_Component_Obj = AudioComponentObj;
-		pControl_PC_App_Component_Obj->addChangeListener(this);
-		// audio 
-		setAudioChannels(0, 2);
-		/*  end of code needed for audio*/
-		/****************end  1 *******************/
-	}
-
-	/************start audio section 2*******************/
-	/*  start of code needed for audio*/
-	~MainContentComponent()
-	{
-		shutdownAudio();
-		delete AudioComponentObj;
-	}
-
-	void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
-	{
-		AudioComponentObj->prepareToPlay(samplesPerBlockExpected, sampleRate);
-	}
-
-
-	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
-	{
-		AudioComponentObj->getNextAudioBlock(bufferToFill);
-	}
-
-	void releaseResources() override
-	{
-		AudioComponentObj->releaseResources();
-	}
-	/*  end of code needed for audio*/
-	/****************end  2 *******************/
-
-
-
-	void changeListenerCallback(ChangeBroadcaster* source) override
-	{
-		if (source == AudioComponentObj)
-		{
-			String event_msg;
-			pControl_PC_App_Component_Obj->getEvent(event_msg);
-			if (0 == event_msg.compare("file loaded"))
-			{
-				playButton.setEnabled(true);
-			}
-			else if (0 == event_msg.compare("file is playing"))
-			{
-				changeState(Playing);
-			}
-			else if (0 == event_msg.compare("file is stopped"))
-			{
-				changeState(Stopped);
-			}
-		}
-	}
-
-
-	void resized() override
-	{
-		openButton.setBounds(10, 10, getWidth() - 20, 20);
-		playButton.setBounds(10, 40, getWidth() - 20, 20);
-		stopButton.setBounds(10, 70, getWidth() - 20, 20);
-		levelLabel.setBounds(10, 100, 90, 20);
-		levelSlider.setBounds(100, 100, getWidth() - 110, 20);
-	}
-
-	void buttonClicked(Button* button) override
-	{
-		if (button == &openButton)  openButtonClicked();
-		if (button == &playButton)  playButtonClicked();
-		if (button == &stopButton)  stopButtonClicked();
-	}
 
 private:
-	enum TransportState
-	{
-		Stopped,
-		Starting,
-		Playing,
-		Stopping
-	};
+    //==============================================================================
 
-	void changeState(TransportState newState)
-	{
-		if (state != newState)
-		{
-			state = newState;
+    // Your private member variables go here...
+    GuiMain guiMain;
 
-			switch (state)
-			{
-			case Stopped:                           // [3]
-				stopButton.setEnabled(false);
-				playButton.setEnabled(true);
-				break;
-
-			case Starting:                          // [4]
-				playButton.setEnabled(false);
-				pControl_PC_App_Component_Obj->sendCommand("start_play");
-
-				break;
-
-			case Playing:                           // [5]
-				stopButton.setEnabled(true);
-				break;
-
-			case Stopping:                          // [6]
-				pControl_PC_App_Component_Obj->sendCommand("stop_play");
-				break;
-			}
-		}
-	}
-
-	void openButtonClicked()
-	{
-		FileChooser chooser("Select a Wave file to play...",
-			File::nonexistent,
-			"*.wav");                                        // [7]
-
-		if (chooser.browseForFileToOpen())                                    // [8]
-		{
-			String file_name;
-			String cmd("play_file ");
-			const char *row_cmd;
-			File file(chooser.getResult());
-			file_name = file.getFullPathName();
-			file_name = file_name.replace("\\", "\\\\");
-			cmd += file_name; //append
-			row_cmd = cmd.toRawUTF8();
-			pControl_PC_App_Component_Obj->sendCommand(row_cmd);
-
-		}
-	}
-
-	void playButtonClicked()
-	{
-		changeState(Starting);
-	}
-
-	void stopButtonClicked()
-	{
-		changeState(Stopping);
-	}
-
-	//==========================================================================
-	TextButton openButton;
-	TextButton playButton;
-	TextButton stopButton;
-	Random random;
-	Slider levelSlider;
-	Label levelLabel;
-
-	TransportState state;
-	AudioComponent *AudioComponentObj;
-	ControlBaseComponent *pControl_PC_App_Component_Obj;
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
 };
 
-Component* createMainContentComponent()
-{
-	return new MainContentComponent();
-}
+
+// (This function is called by the app startup code to create our main component)
+Component* createMainContentComponent()     { return new MainContentComponent(); }
 
 
 #endif  // MAINCOMPONENT_H_INCLUDED

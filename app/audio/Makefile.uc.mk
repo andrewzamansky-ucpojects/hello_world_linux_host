@@ -10,8 +10,8 @@ INCLUDE_THIS_COMPONENT := y
 
 
 
-SRC = Main.cpp
-SRC += MainComponent.cpp
+
+SRC = AudioComponent.cpp
 
 #SPEED_CRITICAL_FILES =
 
