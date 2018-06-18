@@ -30,23 +30,8 @@
 #define	NUM_OF_BYTES_PER_AUDIO_WORD		2// 2- 16bits , 4- 32bits
 
 
+#define CRITICAL_ERROR(str)   {while(1);}
 
-/******   task priorities *********/
-#define HEARTBEAT_THREAD_PRIORITY				(tskIDLE_PRIORITY + 1)
-#define APP_DEV_THREAD_PRIORITY					(tskIDLE_PRIORITY + 4)
-#define SHELL_TASK_PRIORITY						(tskIDLE_PRIORITY + 2)
-#define ASYNC_TX_WRAPPER_TASK_PRIORITY			(tskIDLE_PRIORITY + 2)
-/*********************************/
-
-
-#define ADDITIONAL_STACK_SAFETY_MARGIN	 20
-#define DEFINE_STACK_SIZE(n)    (n + ADDITIONAL_STACK_SAFETY_MARGIN)
-/******   task stack sizes *********/
-#define HEARTBEAT_STACK_SIZE_BYTES				DEFINE_STACK_SIZE( 260 )
-#define MAIN_STACK_SIZE_BYTES					DEFINE_STACK_SIZE( 360 )
-#define SHELL_TASK_STACK_SIZE					DEFINE_STACK_SIZE( 700 )
-#define ASYNC_TX_WRAPPER_TASK_STACK_SIZE		DEFINE_STACK_SIZE( 260 )
-/***********************************/
 
 
 /***********************************/
