@@ -1,18 +1,18 @@
 INCLUDE_THIS_COMPONENT := y
 
 
-#DEFINES =
+#DEFINES +=
 
-#CFLAGS =
+#CFLAGS +=
 
-#ASMFLAGS =
-
-
+#ASMFLAGS +=
 
 
-SRC = main.cpp
 
-#SPEED_CRITICAL_FILES =
+
+SRC += main.cpp
+
+#SPEED_CRITICAL_FILES +=
 
 VPATH = src
 
