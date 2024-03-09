@@ -1,9 +1,5 @@
 /*
- * file : project_defines.h
- *
- *
- *
- *
+ * file : _project_defines.h
  *
  *
  */
@@ -23,10 +19,8 @@
 
 
 
-#define CRITICAL_ERROR(str)   {while(1);}
 
+#define CRITICAL_ERROR(str)   { while(1);}
 
-
-/***********************************/
 
 #endif /* */

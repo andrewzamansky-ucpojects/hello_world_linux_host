@@ -1,5 +1,8 @@
+
 INCLUDE_THIS_COMPONENT := y
 
+
+#INCLUDE_DIR +=
 
 #DEFINES +=
 
@@ -8,13 +11,12 @@ INCLUDE_THIS_COMPONENT := y
 #ASMFLAGS +=
 
 
+SRC = main.c
 
 
-SRC += main.cpp
-
-#SPEED_CRITICAL_FILES +=
 
 VPATH = src
+
 
 
 include $(COMMON_CC)
